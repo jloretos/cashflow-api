@@ -1,70 +1,97 @@
 # 💰 Cashflow API
 
-API para controle de fluxo de caixa desenvolvida em .NET, utilizando boas práticas de arquitetura (Clean Architecture), Entity Framework Core e PostgreSQL.
+API de controle de fluxo de caixa desenvolvida em .NET, seguindo princípios de Clean Architecture.
 
 ---
 
-## 🚀 Tecnologias
+## 📌 Sobre o Projeto
 
-- .NET 8
-- ASP.NET Core Web API
-- Entity Framework Core
-- PostgreSQL
-- Docker
-- Swagger (OpenAPI)
+Esta API permite o registro e consulta de lançamentos financeiros (entradas e saídas), com persistência em banco PostgreSQL.
+
+O objetivo é demonstrar boas práticas de arquitetura, organização de código e uso de tecnologias modernas do ecossistema .NET.
 
 ---
 
-## 🧱 Arquitetura
+## 🧠 Decisões Arquiteturais
 
-O projeto segue princípios de **Clean Architecture**, com separação de responsabilidades:
+- **Clean Architecture**  
+  Separação em camadas (API, Application, Domain, Infrastructure) para garantir baixo acoplamento, manutenibilidade e testabilidade.
 
-- **Cashflow.Api** → Camada de apresentação (Controllers)
-- **Cashflow.Application** → Regras de negócio (Services)
-- **Cashflow.Domain** → Entidades e contratos
-- **Cashflow.Infrastructure** → Acesso a dados (EF Core)
-- **Cashflow.Worker** → Processos assíncronos (futuro uso)
+- **Entity Framework Core**  
+  Utilizado como ORM para abstração do acesso a dados e gerenciamento de migrations.
+
+- **PostgreSQL**  
+  Banco de dados relacional robusto, open source e amplamente utilizado em ambientes cloud.
+
+- **Docker**  
+  Utilizado para padronizar o ambiente e facilitar execução local.
+
+- **Swagger (OpenAPI)**  
+  Documentação interativa para testes e integração com a API.
 
 ---
 
-## ⚙️ Como executar
+## 🏗️ Estrutura do Projeto
 
-### 🔹 Pré-requisitos
-- .NET SDK instalado
-- Docker instalado
+```
+Cashflow.Api            → Camada de apresentação (controllers, endpoints)
+Cashflow.Application    → Regras de aplicação / serviços
+Cashflow.Domain         → Entidades e regras de domínio
+Cashflow.Infrastructure → Persistência e acesso a dados
+Cashflow.Worker         → Processos assíncronos (futuro)
+```
 
 ---
 
-### 🔹 Subir banco de dados
+## 📌 Regras de Negócio
 
-```bash
+- O campo `type` pode ser:
+  - `income` → entrada
+  - `expense` → saída
+
+- O campo `amount` deve ser maior que zero
+
+- Cada lançamento contém:
+  - Id (UUID)
+  - Valor
+  - Data
+  - Tipo
+  - Descrição
+
+---
+
+## 🚀 Como executar o projeto
+
+### 1. Subir o banco com Docker
+```
 docker-compose up -d
 ```
 
----
+### 2. Aplicar migrations
+```
+dotnet ef database update
+```
 
-### 🔹 Rodar API
-
-```bash
+### 3. Executar a API
+```
 dotnet run --project Cashflow.Api
 ```
 
----
-
-### 🔹 Acessar Swagger
-
+### 4. Acessar documentação Swagger
 ```
 http://localhost:5075/swagger
 ```
 
 ---
 
-## 📌 Endpoints
+## 📡 Endpoints
 
 ### ➕ Criar lançamento
+```
+POST /cashflow
+```
 
-**POST** `/cashflow`
-
+Exemplo:
 ```json
 {
   "amount": 150.75,
@@ -77,33 +104,26 @@ http://localhost:5075/swagger
 ---
 
 ### 📄 Listar lançamentos
-
-**GET** `/cashflow`
-
----
-
-## 🗄️ Banco de dados
-
-- PostgreSQL rodando via Docker
-- Migrations gerenciadas via EF Core
-
-```bash
-dotnet ef database update -p Cashflow.Infrastructure -s Cashflow.Api
+```
+GET /cashflow
 ```
 
 ---
 
-## 📈 Melhorias futuras
+## 🧪 Testes
 
-- Autenticação (JWT)
-- Paginação e filtros
-- Separação de comandos e queries (CQRS)
-- Testes automatizados
-- Mensageria (Kafka/RabbitMQ)
+Os testes podem ser realizados diretamente via Swagger UI ou ferramentas como Postman.
+
+---
+
+## 📷 API em execução
+
+Swagger disponível em:  
+http://localhost:5075/swagger
 
 ---
 
 ## 👨‍💻 Autor
 
 Jeferson Loreto  
-Arquiteto de Soluções | .NET | Cloud | Microsserviços
+Solutions Architect | .NET | AWS | Azure
