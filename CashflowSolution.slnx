@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Cashflow.Api/Cashflow.Api.csproj" />
+  <Project Path="Cashflow.Application/Cashflow.Application.csproj" />
+  <Project Path="Cashflow.Domain/Cashflow.Domain.csproj" />
+  <Project Path="Cashflow.Infrastructure/Cashflow.Infrastructure.csproj" />
+  <Project Path="Cashflow.Worker/Cashflow.Worker.csproj" />
+</Solution>
