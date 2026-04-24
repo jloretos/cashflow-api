@@ -1,5 +1,10 @@
 # 💰 Cashflow API
 
+![.NET](https://img.shields.io/badge/.NET-8.0-purple)
+![Docker](https://img.shields.io/badge/docker-enabled-blue)
+![PostgreSQL](https://img.shields.io/badge/database-PostgreSQL-blue)
+![Architecture](https://img.shields.io/badge/architecture-clean--architecture-green)
+
 API de controle de fluxo de caixa desenvolvida em .NET, seguindo princípios de Clean Architecture.
 
 ---
@@ -12,57 +17,105 @@ O objetivo é demonstrar boas práticas de arquitetura, organização de código
 
 ---
 
+## 🧩 Arquitetura (Visão Geral)
+
+```
+           ┌──────────────────────┐
+           │     Swagger UI       │
+           └──────────┬───────────┘
+                      │
+                      ▼
+           ┌──────────────────────┐
+           │    Cashflow.Api      │
+           │   (Controllers)      │
+           └──────────┬───────────┘
+                      │
+                      ▼
+           ┌──────────────────────┐
+           │ Cashflow.Application │
+           │    (Services)        │
+           └──────────┬───────────┘
+                      │
+                      ▼
+           ┌──────────────────────┐
+           │   Cashflow.Domain    │
+           │   (Entities/Rules)   │
+           └──────────┬───────────┘
+                      │
+                      ▼
+           ┌──────────────────────────┐
+           │ Cashflow.Infrastructure  │
+           │   (EF Core / DB)         │
+           └──────────┬──────────────┘
+                      │
+                      ▼
+           ┌──────────────────────┐
+           │     PostgreSQL       │
+           └──────────────────────┘
+```
+
+### 🔎 Fluxo da Requisição
+
+1. Cliente envia requisição (Swagger/Postman)
+2. Controller recebe e valida
+3. Application executa regras
+4. Domain representa entidades
+5. Infrastructure persiste via EF Core
+6. Dados armazenados no PostgreSQL
+
+---
+
 ## 🧠 Decisões Arquiteturais
 
 - **Clean Architecture**  
-  Separação em camadas (API, Application, Domain, Infrastructure) para garantir baixo acoplamento, manutenibilidade e testabilidade.
+  Separação em camadas para baixo acoplamento e alta manutenibilidade
 
 - **Entity Framework Core**  
-  Utilizado como ORM para abstração do acesso a dados e gerenciamento de migrations.
+  ORM para acesso a dados e migrations
 
 - **PostgreSQL**  
-  Banco de dados relacional robusto, open source e amplamente utilizado em ambientes cloud.
+  Banco robusto e open source
 
 - **Docker**  
-  Utilizado para padronizar o ambiente e facilitar execução local.
+  Padronização de ambiente
 
 - **Swagger (OpenAPI)**  
-  Documentação interativa para testes e integração com a API.
+  Documentação interativa
 
 ---
 
 ## 🏗️ Estrutura do Projeto
 
 ```
-Cashflow.Api            → Camada de apresentação (controllers, endpoints)
-Cashflow.Application    → Regras de aplicação / serviços
-Cashflow.Domain         → Entidades e regras de domínio
-Cashflow.Infrastructure → Persistência e acesso a dados
-Cashflow.Worker         → Processos assíncronos (futuro)
+Cashflow.Api            → Controllers / API
+Cashflow.Application    → Serviços / regras
+Cashflow.Domain         → Entidades
+Cashflow.Infrastructure → Banco / EF Core
+Cashflow.Worker         → Processos futuros
 ```
 
 ---
 
 ## 📌 Regras de Negócio
 
-- O campo `type` pode ser:
-  - `income` → entrada
-  - `expense` → saída
+- type:
+  - income → entrada
+  - expense → saída
 
-- O campo `amount` deve ser maior que zero
+- amount deve ser maior que zero
 
-- Cada lançamento contém:
+- Campos:
   - Id (UUID)
-  - Valor
-  - Data
-  - Tipo
-  - Descrição
+  - Amount
+  - Date
+  - Type
+  - Description
 
 ---
 
-## 🚀 Como executar o projeto
+## 🚀 Como executar
 
-### 1. Subir o banco com Docker
+### 1. Subir ambiente
 ```
 docker-compose up -d
 ```
@@ -72,12 +125,12 @@ docker-compose up -d
 dotnet ef database update
 ```
 
-### 3. Executar a API
+### 3. Rodar API
 ```
 dotnet run --project Cashflow.Api
 ```
 
-### 4. Acessar documentação Swagger
+### 4. Swagger
 ```
 http://localhost:5075/swagger
 ```
@@ -86,12 +139,8 @@ http://localhost:5075/swagger
 
 ## 📡 Endpoints
 
-### ➕ Criar lançamento
-```
-POST /cashflow
-```
+### ➕ POST /cashflow
 
-Exemplo:
 ```json
 {
   "amount": 150.75,
@@ -103,22 +152,23 @@ Exemplo:
 
 ---
 
-### 📄 Listar lançamentos
-```
-GET /cashflow
-```
+### 📄 GET /cashflow
+
+Retorna todos os lançamentos.
 
 ---
 
 ## 🧪 Testes
 
-Os testes podem ser realizados diretamente via Swagger UI ou ferramentas como Postman.
+Pode ser testado via:
+- Swagger
+- Postman
 
 ---
 
-## 📷 API em execução
+## 📷 Preview
 
-Swagger disponível em:  
+Swagger:
 http://localhost:5075/swagger
 
 ---
@@ -127,3 +177,4 @@ http://localhost:5075/swagger
 
 Jeferson Loreto  
 Solutions Architect | .NET | AWS | Azure
+
